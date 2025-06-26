@@ -14,7 +14,6 @@ const AddressForm = () => {
     const location = useLocation();
     const path = location.pathname;
     const addressData=location.state?.data || {}
-
     const addressFormFields = [
         {
             label: 'Address',
@@ -116,7 +115,7 @@ const AddressForm = () => {
         }
         else {
             try {
-                await callApi('put', `/auth/users/${addressData.userId}/addresses/${addressData.id}`, data)
+                await callApi('put', `/auth/users/addresses/${addressData?.id}`, data)
                 reset();
                 navigate('/user-profile')
             } finally {

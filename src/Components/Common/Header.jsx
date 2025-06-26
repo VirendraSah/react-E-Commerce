@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { NavLink, Link, Navigate, useNavigate } from 'react-router';
+import { NavLink, Link, useNavigate } from 'react-router';
 import { callApi } from '../../Services/authApi';
 import { Globalcontext } from '../../MainLayout';
 
@@ -17,20 +17,18 @@ function Header() {
     }
   },[])
 
-  const handleLogout =async () => {
-    try{
-      setIsLoading(true)
-      localStorage.removeItem('email')
-      localStorage.removeItem('token')
-      localStorage.removeItem('userId')
-      localStorage.removeItem('cartId')
-      await callApi('post', 'auth/logout')
-      navigate('/')
-      setIsLoggedIn(false)
-    }finally{
-      setIsLoading(false)
+  const handleLogout = async () => {
+    try {
+      setIsLoading(true);
+      await callApi('post', 'auth/logout');
+      localStorage.clear();               
+      navigate('/');                      
+      window.location.reload();        
+    } finally {
+      setIsLoading(false);
     }
-     };
+  };
+  
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">

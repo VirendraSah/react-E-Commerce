@@ -8,18 +8,7 @@ export let Globalcontext = createContext();
 
 function MainLayout({ children }) {
     let [isLoading, setIsLoading] = useState(false);
-    const [details, setDetails] = useState()
     const [userAddress, setuserAddress] = useState()
-
-    const getUserDetails = async () => {
-        try {
-            setIsLoading(true)
-            const response = await callApi('get', 'auth/userDetails')
-            setDetails(response.data)
-        } finally {
-            setIsLoading(false)
-        }
-    };
 
     const getUserAddress = async () => {
         const response = await callApi('get', '/auth/users-address')
@@ -28,7 +17,7 @@ function MainLayout({ children }) {
 
 
     const obj = {
-        isLoading, setIsLoading, details, getUserDetails, userAddress, getUserAddress
+        isLoading, setIsLoading, userAddress, getUserAddress, fetchcartItems, cart
     }
     return (
         <Globalcontext.Provider value={obj}>
@@ -40,7 +29,3 @@ function MainLayout({ children }) {
 }
 
 export default MainLayout
-
-// useEffect(() => {
-//     getUserDetails()
-// }, [])

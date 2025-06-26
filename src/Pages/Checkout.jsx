@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from 'react-router';
 
 function Checkout() {
     const navigate = useNavigate()
-    const { setIsLoading, userAddress, getUserAddress, details, getUserDetails } = useContext(Globalcontext);
+    const { setIsLoading, userAddress, getUserAddress, details} = useContext(Globalcontext);
     const [selectedAddressId, setSelectedAddressId] = useState(null);
     const location = useLocation();
     const totalAmount = location.state?.totalAmount || 0;
@@ -19,7 +19,6 @@ function Checkout() {
 
     useEffect(() => {
         getUserAddress();
-        getUserDetails();
     }, []);
     const userId = details?.userId
 

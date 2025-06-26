@@ -6,21 +6,22 @@ import { Globalcontext } from '../MainLayout';
 import { useNavigate } from 'react-router';
 
 function Cart() {
-    const navigate=useNavigate()
-    const { setIsLoading } = useContext(Globalcontext)
     const cartId = localStorage.getItem('cartId')
-    const [cartItem, setCartItems] = useState([])
+    const { setIsLoading} = useContext(Globalcontext)
+    const [cart, setCart] = useState([])
     const [productquantity, setProductQuantity] = useState(1)
-    console.log(productquantity)
+    const navigate = useNavigate()
+
     const fetchcartItems = async () => {
         try {
             setIsLoading(true)
-            const response = await callApi('get', `/cart/${cartId}`)
-            setCartItems(response.cart.CartItems)
+            const response = await callApi('get', '/cart')
+            setCart(response.cart.CartItems)
         } finally {
             setIsLoading(false)
         }
     }
+
     useEffect(() => {
         fetchcartItems()
     }, [])
@@ -37,7 +38,7 @@ function Cart() {
     }
 
     const handleIncrease = async (id) => {
-        const item = cartItem.find(i => i.Product.productId === id);
+        const item = cart.find(i => i.Product.productId === id);
         const data = {
             cartId: cartId,
             productId: id,
@@ -48,7 +49,7 @@ function Cart() {
     };
 
     const handleDecrease = async (id) => {
-        const item = cartItem.find(i => i.Product.productId === id);
+        const item = cart.find(i => i.Product.productId === id);
         const newQuantity = Math.max(1, item.quantity - 1);
 
         setProductQuantity(prev => Math.max(1, prev - 1));
@@ -61,29 +62,32 @@ function Cart() {
         fetchcartItems()
 
     };
+
     const calculateTotal = () => {
-        return cartItem.reduce((total, item) => {
+        return cart.reduce((total, item) => {
             return total + item.Product.price * item.quantity;
         }, 0)
     };
-    const totalAmount=calculateTotal().toFixed(2)
-    console.log(typeof(totalAmount))
+
+    const totalAmount = calculateTotal().toFixed(2)
+
     const handleCheckout = () => {
         const email = localStorage.getItem('email');
-    
+
         if (!email) {
             alert('Please login and then come back here.');
+            navigate('/')
             return;
         }
-    
+
         if (totalAmount === '0.00') {
             alert('Please add some items to your cart.');
             return;
         }
-    
+
         navigate('/checkout', { state: { totalAmount: totalAmount } });
     };
-    
+
 
     return (
         <DashboardLayout>
@@ -106,24 +110,31 @@ function Cart() {
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
 
-                                    {Array.isArray(cartItem) && cartItem.length > 0 ? (
-                                        cartItem.map((item, index) => {
-                                            const { quantity, Product: product } = item;
-                                            return (
-                                                <CartItemRow
-                                                    key={product?.productId || index}
-                                                    quantity={quantity}
-                                                    product={product}
-                                                    handlecartDetele={handlecartDetele}
-                                                    setQuantity={setProductQuantity}
-                                                    productquantity={productquantity}
-                                                    handleDecrease={handleDecrease}
-                                                    handleIncrease={handleIncrease}
-                                                />
-                                            );
-                                        })
-                                    )
-                                        : 'No product Found'
+                                    {cart.length === 0
+                                        ? (
+                                            <tr>
+                                                <td colSpan="5" className="text-center py-4 text-gray-500">
+                                                    No product Found
+                                                </td>
+                                            </tr>
+                                        )
+                                        :(
+                                            cart.map((item, index) => {
+                                                const { quantity, Product: product } = item;
+                                                return (
+                                                    <CartItemRow
+                                                        key={product?.productId || index}
+                                                        quantity={quantity}
+                                                        product={product}
+                                                        handlecartDetele={handlecartDetele}
+                                                        setQuantity={setProductQuantity}
+                                                        productquantity={productquantity}
+                                                        handleDecrease={handleDecrease}
+                                                        handleIncrease={handleIncrease}
+                                                    />
+                                                );
+                                            })
+                                        )
                                     }
                                 </tbody>
                             </table>
@@ -164,14 +175,14 @@ function Cart() {
 export default Cart;
 
 function CartItemRow({ product, handlecartDetele, quantity, handleDecrease, handleIncrease }) {
-    const { name, price, image, description, productId } = product
+    const { name, price, productImages, description, productId } = product
     return (
         <>
             <tr key={productId}>
                 <td className="px-6 py-4">
                     <div className="flex items-center">
                         <img
-                            src={image}
+                            src={productImages[0].url}
                             alt={name}
                             className="w-20 h-20 object-cover rounded"
                         />

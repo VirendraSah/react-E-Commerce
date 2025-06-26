@@ -40,7 +40,7 @@ function Signup() {
             if (path === '/edit-profile') {
                 const { userId } = userData
                 if (userId) {
-                    await callApi('put', `auth/edit-user/${userId}`, postData, true);
+                    await callApi('put', `auth/edit-user`, postData, true);
                     navigate('/user-profile')
                 }
             } else {

@@ -15,7 +15,6 @@ import AdminDashboard from './Layout/Admindashboard';
 import Dashboard from './Pages/Dashboard';
 import Viewproduct from './Pages/Viewproduct';
 import AddressForm from './Pages/AddressForm';
-import MainLayout from './MainLayout';
 
 function App() {
     return (
@@ -31,19 +30,22 @@ function App() {
                     <Route path='/otp' element={<OneTimePassword />} />
                     <Route path='/change-password' element={<ChangePassword />} />
                 </Route>
-                <Route index element={<Home />} />
-                <Route path='/cart' element={<Cart />} />
-                <Route path='/checkout' element={<Checkout />} />
-                <Route path='/user-profile' element={<Userprofile />} />
-                <Route path='/add-address' element={<AddressForm/>}/>
-                <Route path='/update-address' element={<AddressForm/>}/>
-                {/* Dashboard layout routes */}
+
+                {/* Admin Dashboard layout routes */}
                 <Route path="/dashboard" element={<AdminDashboard />}>
                     <Route index element={<Dashboard />} />
                     <Route path="add-product" element={<Addproduct />} />
                     <Route path="edit-product" element={<Addproduct />} />
                     <Route path="view-product" element={<Viewproduct />} />
                 </Route>
+
+                {/* user layout routes */}
+                <Route index element={<Home />} />
+                <Route path='/cart' element={<Cart />} />
+                <Route path='/checkout' element={<Checkout />} />
+                <Route path='/user-profile' element={<Userprofile />} />
+                <Route path='/add-address' element={<AddressForm />} />
+                <Route path='/update-address' element={<AddressForm />} />
             </Routes>
 
         </div >
